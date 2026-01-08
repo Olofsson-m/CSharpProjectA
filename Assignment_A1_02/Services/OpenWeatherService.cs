@@ -1,11 +1,12 @@
 ﻿using Assignment_A1_02.Models;
+using Microsoft.AspNetCore.Http.Features;
 using Newtonsoft.Json;
 
 namespace Assignment_A1_02.Services;
 public class OpenWeatherService
 {
     readonly HttpClient _httpClient = new HttpClient();
-    readonly string _apiKey = "your_api_key_here"; // Replace with your OpenWeatherMap API key
+    readonly string _apiKey = "e7554cfd90a75bb0d5ddf09c26fe8499"; // Replace with your OpenWeatherMap API key
 
     //Event declaration
     public event EventHandler<string> WeatherForecastAvailable;
@@ -23,6 +24,7 @@ public class OpenWeatherService
         
         //Event code here to fire the event
         //Your code
+        OnWeatherForecastAvailable($"Forecast retreived for {forecast.City}");
         return forecast;
     }
     public async Task<Forecast> GetForecastAsync(double latitude, double longitude)
@@ -34,6 +36,7 @@ public class OpenWeatherService
         Forecast forecast = await ReadWebApiAsync(uri);
 
         //Event code here to fire the event
+        OnWeatherForecastAvailable($"Forecast retreived for {forecast.City}");
         //Your code
         return forecast;
     }
@@ -48,7 +51,17 @@ public class OpenWeatherService
 
         //Convert WeatherApiData to Forecast using Linq.
         //Your code
-        var forecast = new Forecast(); //dummy to compile, replaced by your own code
+        var forecast = new Forecast
+        {
+            City = wd.city.name,
+            Items = wd.list.Select(item => new ForecastItem
+            {
+                DateTime = UnixTimeStampToDateTime(item.dt),
+                Temperature = item.main.temp,
+                WindSpeed = item.wind.speed,
+                Description = item.weather.FirstOrDefault().description
+            }).ToList()
+        };
         return forecast;
     }
 
