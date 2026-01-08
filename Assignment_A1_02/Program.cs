@@ -28,10 +28,10 @@ class Program
         }
         catch (Exception ex)
         {
-            exception = ex;
             //How to handle an exception
-            System.Console.WriteLine("ERROR!!!!!");
+            exception = ex;
             //Your Code
+            System.Console.WriteLine($"ERROR!!!!! {ex.Message}");
         }
 
         foreach (var task in tasks)
@@ -52,8 +52,7 @@ class Program
                     Console.WriteLine($"{item.DateTime:HH:mm} | Temp: {item.Temperature}°C | Wind: {item.WindSpeed}M/s");
                 }
             }
-                
-            
+
             else
                 System.Console.WriteLine("Something went wrong, try again.");
         }

@@ -21,8 +21,6 @@ public class OpenWeatherService
         string content = await response.Content.ReadAsStringAsync();
         WeatherApiData wd = JsonConvert.DeserializeObject<WeatherApiData>(content);
         
-        var upp = wd.list.Select(q => q);
-        
         //Convert WeatherApiData to Forecast using Linq.
         //Your code
         //Hint: you will find 
