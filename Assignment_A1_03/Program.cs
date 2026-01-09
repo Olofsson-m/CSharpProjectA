@@ -1,4 +1,5 @@
-﻿using Assignment_A1_03.Models;
+﻿using System.Security.Cryptography.X509Certificates;
+using Assignment_A1_03.Models;
 using Assignment_A1_03.Services;
 
 namespace Assignment_A1_03;
@@ -11,15 +12,14 @@ class Program
 
         //Register the event
         //Your Code
+        service.WeatherForecastAvailable += _eventHandler;
 
-        Task<Forecast>[] tasks = { null, null, null, null, null, null };
+        Task<Forecast>[] tasks = { null, null, null, null, /*null, null*/ };
         Exception exception = null;
         try
         {
             double latitude = 59.5086798659495;
             double longitude = 18.2654625932976;
-            eh = (sender, message) => Console.WriteLine($"Event: {message}");
-            service.WeatherForecastAvailable += eh;
             //Create the two tasks and wait for comletion
             tasks[0] = service.GetForecastAsync(latitude, longitude);
             tasks[1] = service.GetForecastAsync("Miami");
@@ -32,8 +32,8 @@ class Program
             //Wait and confirm we get an event showing cahced data avaialable
             Task.WaitAll(tasks[2], tasks[3]);
 
-            tasks[4] = service.GetForecastAsync(latitude, longitude);
-            tasks[5] = service.GetForecastAsync("New York");   
+            // tasks[4] = service.GetForecastAsync(latitude, longitude);
+            // tasks[5] = service.GetForecastAsync("New York");   // New call to see if the event trigger works properly.
 
             Task.WaitAll(tasks[4], tasks[5]);
         }
@@ -42,7 +42,7 @@ class Program
             exception = ex;
             //How to handle an exception
             //Your Code
-            System.Console.WriteLine($"ERROR!!!!! {ex.Message}");
+            System.Console.WriteLine($"ERROR!!!!! {exception.Message}");
         }
 
         foreach (var task in tasks)
@@ -72,6 +72,7 @@ class Program
 
     //Event handler declaration
     //Your Code
-    static EventHandler<string> eh;
+    static EventHandler<string> _eventHandler = (sender, message) => Console.WriteLine($"Event: {message}");
+    
 }
 
