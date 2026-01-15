@@ -8,6 +8,8 @@ class Program
 {
     static void Main(string[] args)
     {
+
+        //SKAPAD AV MAX OLOFSSON
         OpenWeatherService service = new OpenWeatherService();
 
         //Register the event
